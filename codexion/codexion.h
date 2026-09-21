@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/16 18:27:39 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/21 14:08:08 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@
 
 typedef struct s_pars
 {
-  int nb_coders;
-  int burnout;
-  int compile;
-  int debug;
-  int refactor;
-  int nb_compiles;
-  int cooldown;
-  int scheduler;
-}              t_pars;
+	int	nb_coders;
+	int	burnout;
+	int	compile;
+	int	debug;
+	int	refactor;
+	int	nb_compiles;
+	int	cooldown;
+	int	scheduler;
+}				t_pars;
 
-void  error(int parser_res);
+void	error(int parser_res);
 
 #endif
