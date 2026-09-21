@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:03:59 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/21 14:13:49 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/21 15:32:58 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	parse_int(char *arg)
 	res = 0;
 	while (arg[i])
 	{
-		if !(arg[i] >= '0' && arg[i] <= '9')
+		if (!(arg[i] >= '0' && arg[i] <= '9'))
 			return (-1);
 		res = res * 10 + (arg[i] - '0');
 		i++;
@@ -42,14 +42,14 @@ int	parse_sched(char *arg)
 	edf = "edf";
 	if (arg[0] == 'f' && strlen(arg) == 4)
 	{
-		while (arg[i] == fifo[i])
+		while ((arg[i] == fifo[i]) && i < 4)
 			i++;
 		if (i == 4)
 			return (1);
 	}
 	else if (arg[0] == 'e' && strlen(arg) == 3)
 	{
-		while (arg[i] == edf[i])
+		while ((arg[i] == edf[i]) && i < 3)
 			i++;
 		if (i == 3)
 			return (2);
@@ -81,7 +81,7 @@ int	parser(t_pars *parsed_data, char **argv)
 	temp[4] = parse_int(argv[5]);
 	temp[5] = parse_int(argv[6]);
 	temp[6] = parse_int(argv[7]);
-	temp[7] = parse_int(argv[8]);
+	temp[7] = parse_sched(argv[8]);
 	i = 0;
 	while (i < 7)
 	{

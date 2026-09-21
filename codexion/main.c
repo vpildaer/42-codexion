@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:10:18 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/16 18:36:12 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/21 15:18:10 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	main(int argc, char **argv)
 	}
 	memset(&parsed_data, 0, sizeof(t_pars));
 	parser_res = parser(&parsed_data, argv);
-	if (parsed_args != 0)
+	if (parser_res != 0)
 	{
 		error(parser_res);
 		return (0);
