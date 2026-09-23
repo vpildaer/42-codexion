@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:10:18 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/21 15:18:10 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/23 10:48:00 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	error(int parser_res)
 		printf("Input Error: negative/non-integers numbers are not allowed");
 	else if (parser_res == 2)
 		printf("Input Error: scheduler has to either be fifo or edf");
+	else if (parser_res == 3)
+		printf("Input Error : number_of_coders must be greater or equal to 1");
 	else
 		printf("Input Error");
 }

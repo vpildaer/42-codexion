@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:03:59 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/21 15:32:58 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/23 14:35:10 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	parse_int(char *arg)
 {
-	int	i;
-	int	res;
+	int		i;
+	long	res;
 
-	if (arg[0] == '-' || (arg[0] > '2' && strlen(arg) >= 10) || arg == NULL)
+	if (arg == NULL || !arg || arg[0] == '-')
 		return (-1);
 	i = 0;
 	res = 0;
@@ -28,7 +28,9 @@ int	parse_int(char *arg)
 		res = res * 10 + (arg[i] - '0');
 		i++;
 	}
-	return (res);
+	if (res > 2147483647)
+		return (-1);
+	return ((int) res);
 }
 
 int	parse_sched(char *arg)
@@ -57,7 +59,7 @@ int	parse_sched(char *arg)
 	return (-1);
 }
 
-void	store_data(t_pars *parsed_data, int temp[])
+int	store_data(t_pars *parsed_data, int temp[])
 {
 	parsed_data->nb_coders = temp[0];
 	parsed_data->burnout = temp[1];
@@ -67,6 +69,9 @@ void	store_data(t_pars *parsed_data, int temp[])
 	parsed_data->nb_compiles = temp[5];
 	parsed_data->cooldown = temp[6];
 	parsed_data->scheduler = temp[7];
+	if (parsed_data->nb_coders < 1 || parsed_data->compile < 1)
+		return (3);
+	return (0);
 }
 
 int	parser(t_pars *parsed_data, char **argv)
@@ -91,6 +96,5 @@ int	parser(t_pars *parsed_data, char **argv)
 	}
 	if (temp[7] < 0)
 		return (2);
-	store_data(parsed_data, temp);
-	return (0);
+	return (store_data(parsed_data, temp));
 }
