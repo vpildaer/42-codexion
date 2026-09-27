@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:03:59 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/23 14:35:10 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/27 14:47:39 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	parse_int(char *arg)
 	int		i;
 	long	res;
 
-	if (arg == NULL || !arg || arg[0] == '-')
+	if (arg == NULL || arg[0] == '\0' || arg[0] == '-')
 		return (-1);
 	i = 0;
 	res = 0;
@@ -61,6 +61,8 @@ int	parse_sched(char *arg)
 
 int	store_data(t_pars *parsed_data, int temp[])
 {
+	long	time_cmp;
+
 	parsed_data->nb_coders = temp[0];
 	parsed_data->burnout = temp[1];
 	parsed_data->compile = temp[2];
@@ -69,8 +71,18 @@ int	store_data(t_pars *parsed_data, int temp[])
 	parsed_data->nb_compiles = temp[5];
 	parsed_data->cooldown = temp[6];
 	parsed_data->scheduler = temp[7];
-	if (parsed_data->nb_coders < 1 || parsed_data->compile < 1)
+	if (parsed_data->nb_coders < 1)
 		return (3);
+	if (parsed_data->nb_compiles < 1)
+		return (4);
+	if (parsed_data->compile < 1)
+		return (5);
+	if (parsed_data->burnout < 1)
+		return (6);
+	time_cmp = parsed_data->compile + parsed_data->debug;
+	time_cmp = time_cmp + parsed_data->refactor;
+	if (time_cmp < parsed_data->burnout)
+		return (7);
 	return (0);
 }
 
