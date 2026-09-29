@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/29 16:33:23 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/29 17:19:55 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,13 @@ void			destroy_dongle_mutex(t_data *data);
 long			get_time(struct timespec start);
 
 void			compile(t_coder *coder);
+
+void			add_to_queue(t_heap *pq, t_coder *coder);
+
+void			wait(t_coder *coder);
+
+void			init_dongle_cond(t_data *data);
+
+void			destroy_dongle_cond(t_data *data);
 
 #endif

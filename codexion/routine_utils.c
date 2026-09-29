@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:10:33 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/29 15:42:53 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/29 17:22:10 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,13 @@ void	compile(t_coder *coder)
 	pthread_mutex_unlock(&(coder->right_dongle->dongle_mutex));
 	pthread_mutex_unlock(&(coder->coder_mutex));
 	coder->left_dongle->dongle_status = AVAILABLE;
+}
+
+void	wait(t_coder *coder)
+{
+	add_to_queue(&(coder->left_dongle->pq), coder);
+	add_to_queue(&(coder->right_dongle->pq), coder);
+	coder->coder_status = WAITING;
+	pthread_cond_wait(&(coder->left_dongle->dongle_cond), &(coder->left_dongle->dongle_mutex));
+	pthread_cond_wait(&(coder->right_dongle->dongle_cond), &(coder->right_dongle->dongle_mutex));
 }

@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:04:56 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/29 15:42:19 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/29 17:25:27 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ void	*routine(void *coder)
 	//long	runtime;
 
 	coder_p = (t_coder*) coder;
+	if (coder_p->left_dongle->dongle_status == TAKEN 
+		|| coder_p->right_dongle->dongle_status == TAKEN)
+		wait(coder_p);
 	compile(coder_p);
 	// pthread_mutex_lock(&(coder_p->data->all_dongles[0].dongle_mutex));
 	// runtime = get_time(coder_p->data->start_time);
@@ -30,6 +33,8 @@ void	*routine(void *coder)
 void	start(t_data *data)
 {
 	init_dongle_mutex(data);
+	init_dongle_cond(data);
 	init_coder_threads(data);
 	destroy_dongle_mutex(data);
+	destroy_dongle_cond(data);
 }
