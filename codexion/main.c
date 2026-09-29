@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:10:18 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/27 15:36:23 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/28 14:37:30 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,8 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	res = init_simulation(&data, parsed_data);
+	if (res == -1)
+		return (0);
+	start(&data);
 	return (0);
 }

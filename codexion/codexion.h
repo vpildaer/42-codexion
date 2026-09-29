@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   codexion.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
+/*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/27 15:41:32 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/29 16:33:23 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct s_request
 {
 	int				coder_id;
 	struct timespec	arrival_time;
-	struct timespec	deadline;
+	long			deadline;
 }				t_request;
 
 typedef struct s_heap
@@ -85,6 +85,7 @@ typedef struct s_coder
 	int				compiles_count;
 	t_coder_stat	coder_status;
 	pthread_mutex_t	coder_mutex;
+	struct s_data	*data;
 }				t_coder;
 
 typedef struct s_data
@@ -98,26 +99,44 @@ typedef struct s_data
 	t_pars			parsed_data;
 }				t_data;
 
-void	error(int parser_res);
+void			error(int parser_res);
 
-int		parser(t_pars *parsed_data, char **argv);
+int				parser(t_pars *parsed_data, char **argv);
 
-int		parse_int(char *arg);
+int				parse_int(char *arg);
 
-int		parse_sched(char *arg);
+int				parse_sched(char *arg);
 
-int		store_data(t_pars *parsed_data, int temp[]);
+int				store_data(t_pars *parsed_data, int temp[]);
 
-int		init_simulation(t_data *data, t_pars parsed_data);
+int				init_simulation(t_data *data, t_pars parsed_data);
 
-void	init_coders(t_data *data);
+void			init_coders(t_data *data);
 
-int		init_heap(t_heap *pq, t_pars parsed_data);
+int				init_heap(t_heap *pq, t_pars parsed_data);
 
-int		timespec_cmp(struct timespec a, struct timespec b);
+long			timespec_diff(struct timespec a, struct timespec b);
 
-int		fifo_compare(t_request *a, t_request *b);
+struct timespec	timespec_add(struct timespec a, struct timespec b);
 
-int		edf_compare(t_request *a, t_request *b);
+long			calc_deadline(t_coder *coder);
+
+int				fifo_compare(t_request *a, t_request *b);
+
+int				edf_compare(t_request *a, t_request *b);
+
+void			*routine(void *coder);
+
+void			start(t_data *data);
+
+void			init_coder_threads(t_data *data);
+
+void			init_dongle_mutex(t_data *data);
+
+void			destroy_dongle_mutex(t_data *data);
+
+long			get_time(struct timespec start);
+
+void			compile(t_coder *coder);
 
 #endif

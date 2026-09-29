@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:03:59 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/27 14:47:39 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/09/28 15:02:51 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	store_data(t_pars *parsed_data, int temp[])
 		return (6);
 	time_cmp = parsed_data->compile + parsed_data->debug;
 	time_cmp = time_cmp + parsed_data->refactor;
-	if (time_cmp < parsed_data->burnout)
+	if (time_cmp > parsed_data->burnout)
 		return (7);
 	return (0);
 }
