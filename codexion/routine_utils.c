@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:10:33 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/29 17:22:10 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/02 16:50:23 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,36 @@ void	output_coder(t_coder *coder)
 
 void	compile(t_coder *coder)
 {
-	coder->left_dongle->dongle_status = TAKEN;
+	pthread_mutex_lock(&coder->coder_mutex);
+	take_dongle(coder, coder->left_dongle);
+	take_dongle(coder, coder->right_dongle);
 	coder->coder_status = COMPILING;
-	pthread_mutex_lock(&(coder->coder_mutex));
-	pthread_mutex_lock(&(coder->left_dongle->dongle_mutex));
-	pthread_mutex_lock(&(coder->right_dongle->dongle_mutex));
+	clock_gettime(CLOCK_MONOTONIC, &coder->last_compile_start);
 	output_coder(coder);
 	usleep(coder->data->parsed_data.compile * 1000);
-	pthread_mutex_unlock(&(coder->left_dongle->dongle_mutex));
-	pthread_mutex_unlock(&(coder->right_dongle->dongle_mutex));
-	pthread_mutex_unlock(&(coder->coder_mutex));
-	coder->left_dongle->dongle_status = AVAILABLE;
+	release_dongle(coder, coder->left_dongle);
+	release_dongle(coder, coder->right_dongle);
+	pthread_mutex_unlock(&coder->coder_mutex);
 }
 
-void	wait(t_coder *coder)
+void	debug_and_refact(t_coder *coder)
 {
-	add_to_queue(&(coder->left_dongle->pq), coder);
-	add_to_queue(&(coder->right_dongle->pq), coder);
-	coder->coder_status = WAITING;
-	pthread_cond_wait(&(coder->left_dongle->dongle_cond), &(coder->left_dongle->dongle_mutex));
-	pthread_cond_wait(&(coder->right_dongle->dongle_cond), &(coder->right_dongle->dongle_mutex));
+	pthread_mutex_lock(&coder->coder_mutex);
+	coder->coder_status = DEBUGGING;
+	output_coder(coder);
+	usleep(coder->data->parsed_data.debug);
+	coder->coder_status = REFACTORING;
+	output_coder(coder);
+	usleep(coder->data->parsed_data.refactor);
+	pthread_mutex_unlock(&coder->coder_mutex);
 }
+
+
+// void	wait(t_coder *coder)
+// {
+// 	add_to_queue(&(coder->left_dongle->pq), coder);
+// 	add_to_queue(&(coder->right_dongle->pq), coder);
+// 	coder->coder_status = WAITING;
+// 	pthread_cond_wait(&(coder->left_dongle->dongle_cond), &(coder->left_dongle->dongle_mutex));
+// 	pthread_cond_wait(&(coder->right_dongle->dongle_cond), &(coder->right_dongle->dongle_mutex));
+// }

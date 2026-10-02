@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/29 17:19:55 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/02 16:51:03 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ int				parse_sched(char *arg);
 
 int				store_data(t_pars *parsed_data, int temp[]);
 
-int				init_simulation(t_data *data, t_pars parsed_data);
+void			init_simulation(t_data *data, t_pars parsed_data);
+
+void			check_simulation(t_data *data);
 
 void			init_coders(t_data *data);
 
@@ -125,6 +127,16 @@ int				fifo_compare(t_request *a, t_request *b);
 
 int				edf_compare(t_request *a, t_request *b);
 
+void			swap(t_request *a, t_request *b);
+
+void			heapify(t_heap *pq, int index);
+
+void			enqueue(t_heap *pq, t_request req);
+
+int				dequeue(t_heap *pq);
+
+int				peek(t_heap *pq);
+
 void			*routine(void *coder);
 
 void			start(t_data *data);
@@ -139,12 +151,18 @@ long			get_time(struct timespec start);
 
 void			compile(t_coder *coder);
 
+void			debug_and_refact(t_coder *coder);
+
 void			add_to_queue(t_heap *pq, t_coder *coder);
 
-void			wait(t_coder *coder);
+// void			wait(t_coder *coder);
 
 void			init_dongle_cond(t_data *data);
 
 void			destroy_dongle_cond(t_data *data);
+
+void			take_dongle(t_coder *coder, t_dongle *dongle);
+
+void			release_dongle(t_coder *coder, t_dongle *dongle);
 
 #endif

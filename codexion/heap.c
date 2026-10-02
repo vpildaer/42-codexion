@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/27 13:03:04 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/29 16:41:20 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/02 14:31:23 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,5 @@ void	add_to_queue(t_heap *pq, t_coder *coder)
 	req.coder_id = coder->coder_id;
 	clock_gettime(CLOCK_MONOTONIC, &(req.arrival_time));
 	req.deadline = calc_deadline(coder);
-	if (pq->count == 0)
-		pq->requests[0] = req;
-	else
-		pq->requests[1] = req;
-	(pq->count)++;
+	enqueue(pq, req);
 }

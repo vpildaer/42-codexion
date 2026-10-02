@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/29 12:25:35 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/09/29 17:18:32 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/02 17:05:21 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void    init_coder_threads(t_data *data)
 	while (i < data->parsed_data.nb_coders)
 	{
 		pthread_create(&(data->all_coders[i].coder_thread), NULL, routine,
-				 (void*) &(data->all_coders[i]));
+				 (void*) data);
 		i++;
 	}
 	i = 0;
