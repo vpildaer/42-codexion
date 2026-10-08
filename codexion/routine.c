@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:04:56 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 16:06:01 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/08 17:26:27 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,15 @@ int	take_dongle(t_coder *coder, t_dongle *dongle)
 		return (0);
 	}
 	dongle->dongle_status = TAKEN;
+	pthread_mutex_lock(&coder->data->log_mutex);
+	printf("%ld %d has taken a dongle\n", get_time(coder->data->start_time),
+		coder->coder_id);
+	pthread_mutex_unlock(&coder->data->log_mutex);
 	pthread_mutex_unlock(&dongle->dongle_mutex);
 	return (1);
 }
 
-void	release_dongle(t_coder *coder, t_dongle *dongle)
+void	release_dongle(t_dongle *dongle)
 {
 	pthread_mutex_lock(&dongle->dongle_mutex);
 	dongle->dongle_status = AVAILABLE;

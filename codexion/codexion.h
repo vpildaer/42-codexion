@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 15:48:04 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/08 16:15:25 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int				take_dongle(t_coder *coder, t_dongle *dongle);
 void			wait_dongle(t_coder *coder, t_dongle *dongle,
 					struct timespec now);
 
-void			release_dongle(t_coder *coder, t_dongle *dongle);
+void			release_dongle(t_dongle *dongle);
 
 void			ft_free(t_data *data);
 

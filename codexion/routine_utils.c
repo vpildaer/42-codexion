@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:10:33 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 16:06:16 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/08 16:15:50 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,16 @@ void	finish_compile(t_coder *coder, int l_res, int r_res)
 	if (coder->left_dongle < coder->right_dongle)
 	{
 		if (l_res)
-			release_dongle(coder, coder->left_dongle);
+			release_dongle(coder->left_dongle);
 		if (r_res)
-			release_dongle(coder, coder->right_dongle);
+			release_dongle(coder->right_dongle);
 	}
 	else
 	{
 		if (r_res)
-			release_dongle(coder, coder->right_dongle);
+			release_dongle(coder->right_dongle);
 		if (l_res)
-			release_dongle(coder, coder->left_dongle);
+			release_dongle(coder->left_dongle);
 	}
 }
 
