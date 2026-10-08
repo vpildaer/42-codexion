@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:10:18 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/02 17:02:59 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/06 15:28:22 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,20 @@ void	error(int parser_res)
 		printf("Input Error");
 }
 
+void	ft_free(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->parsed_data.nb_coders)
+	{
+		free(data->all_dongles[i].pq.requests);
+		i++;
+	}
+	free(data->all_coders);
+	free(data->all_dongles);
+}
+
 int	main(int argc, char **argv)
 {
 	int		parser_res;
@@ -52,11 +66,9 @@ int	main(int argc, char **argv)
 	}
 	init_simulation(&data, parsed_data);
 	if (data.simulation_stop != 1)
-		start(&data);
-	while (data.simulation_stop != 1)
 	{
-		routine((void *) &data);
-		check_simulation(&data);
+		start(&data);
+		ft_free(&data);
 	}
 	return (0);
 }

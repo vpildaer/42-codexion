@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/23 14:24:31 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/02 16:56:25 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/06 15:26:16 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	init_coders(t_data *data)
 		data->all_coders[i].coder_id = i + 1;
 		data->all_coders[i].left_dongle = &(data->all_dongles[i]);
 		data->all_coders[i].right_dongle = &(data->all_dongles[i + 1]);
+		data->all_coders[i].last_compile_start = data->start_time;
 		data->all_coders[i].compiles_count = 0;
 		data->all_coders[i].coder_status = WAITING;
 		data->all_coders[i].data = data;
@@ -30,6 +31,7 @@ void	init_coders(t_data *data)
 	data->all_coders[i].coder_id = i + 1;
 	data->all_coders[i].left_dongle = &(data->all_dongles[i]);
 	data->all_coders[i].right_dongle = &(data->all_dongles[0]);
+	data->all_coders[i].last_compile_start = data->start_time;
 	data->all_coders[i].compiles_count = 0;
 	data->all_coders[i].coder_status = WAITING;
 	data->all_coders[i].data = data;
@@ -64,12 +66,13 @@ void	check_simulation(t_data *data)
 		clock_gettime(CLOCK_MONOTONIC, &now);
 		if (timespec_diff(data->all_coders[i].last_compile_start, now)
 			>= data->parsed_data.burnout)
-			{
-				data->simulation_stop = 1;
-				pthread_mutex_lock(&data->log_mutex);
-				printf("%ld %d burned out", get_time(data->start_time), data->all_coders[i].coder_id);
-				return ;
-			}
+		{
+			data->simulation_stop = 1;
+			pthread_mutex_lock(&data->log_mutex);
+			printf("%ld %d burned out", get_time(data->start_time), i + 1);
+			pthread_mutex_unlock(&data->log_mutex);
+			return ;
+		}
 		i++;
 	}
 	if (done_compiling == data->parsed_data.nb_coders)
@@ -94,8 +97,8 @@ void	init_simulation(t_data *data, t_pars parsed_data)
 		return ;
 	}
 	data->parsed_data = parsed_data;
+	clock_gettime(CLOCK_MONOTONIC, &(data->start_time));
 	init_coders(data);
 	init_dongles(data);
-	clock_gettime(CLOCK_MONOTONIC, &(data->start_time));
 	return ;
 }

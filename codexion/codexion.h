@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/02 16:51:03 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/06 14:42:15 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,5 +164,7 @@ void			destroy_dongle_cond(t_data *data);
 void			take_dongle(t_coder *coder, t_dongle *dongle);
 
 void			release_dongle(t_coder *coder, t_dongle *dongle);
+
+void			ft_free(t_data *data);
 
 #endif
