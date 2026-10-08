@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/29 12:25:35 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/06 15:22:07 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/08 13:29:00 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ void	init_coder_threads(t_data *data)
 	i = 0;
 	while (i < data->parsed_data.nb_coders)
 	{
+		pthread_mutex_init(&data->all_coders[i].coder_mutex, NULL);
+		i++;
+	}
+	i = 0;
+	while (i < data->parsed_data.nb_coders)
+	{
 		pthread_create(&(data->all_coders[i].coder_thread), NULL, routine,
 			(void*) &data->all_coders[i]);
 		i++;
@@ -27,12 +33,6 @@ void	init_coder_threads(t_data *data)
 	while (i < data->parsed_data.nb_coders)
 	{
 		pthread_join(data->all_coders[i].coder_thread, NULL);
-		i++;
-	}
-	i = 0;
-	while (i < data->parsed_data.nb_coders)
-	{
-		pthread_mutex_init(&data->all_coders[i].coder_mutex, NULL);
 		i++;
 	}
 }
@@ -49,18 +49,6 @@ void	init_dongle_mutex(t_data *data)
 	}
 }
 
-void	destroy_dongle_mutex(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->parsed_data.nb_coders)
-	{
-		pthread_mutex_destroy(&(data->all_dongles[i].dongle_mutex));
-		i++;
-	}
-}
-
 void	init_dongle_cond(t_data *data)
 {
 	int	i;
@@ -73,14 +61,27 @@ void	init_dongle_cond(t_data *data)
 	}
 }
 
-void	destroy_dongle_cond(t_data *data)
+void	destroy_dongle_mutex_and_cond(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	while (i < data->parsed_data.nb_coders)
 	{
+		pthread_mutex_destroy(&(data->all_dongles[i].dongle_mutex));
 		pthread_cond_destroy(&(data->all_dongles[i].dongle_cond));
+		i++;
+	}
+}
+
+void	destroy_coder_mutex(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->parsed_data.nb_coders)
+	{
+		pthread_mutex_destroy(&(data->all_coders[i].coder_mutex));
 		i++;
 	}
 }

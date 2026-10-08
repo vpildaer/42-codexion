@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/27 13:03:04 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/06 14:42:13 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/08 14:02:08 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	init_heap(t_heap *pq, t_pars parsed_data)
 	pq->requests = malloc(sizeof(t_request) * 2);
 	if (pq->requests == NULL)
 		return (-1);
-	memset(pq->requests, 0, sizeof(t_request));
+	memset(pq->requests, 0, sizeof(t_request) * 2);
 	pq->count = 0;
 	if (parsed_data.scheduler == 1)
 		pq->compare = &fifo_compare;

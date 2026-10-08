@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_routine.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/23 14:24:31 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/06 15:26:16 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/08 13:50:48 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,35 +49,6 @@ void	init_dongles(t_data *data)
 		init_heap(&(data->all_dongles[i].pq), data->parsed_data);
 		i++;
 	}
-}
-
-void	check_simulation(t_data *data)
-{
-	int				i;
-	int				done_compiling;
-	struct timespec	now;
-
-	i = 0;
-	done_compiling = 0;
-	while (i < data->parsed_data.nb_coders)
-	{
-		if (data->all_coders[i].compiles_count == data->parsed_data.nb_compiles)
-			done_compiling++;
-		clock_gettime(CLOCK_MONOTONIC, &now);
-		if (timespec_diff(data->all_coders[i].last_compile_start, now)
-			>= data->parsed_data.burnout)
-		{
-			data->simulation_stop = 1;
-			pthread_mutex_lock(&data->log_mutex);
-			printf("%ld %d burned out", get_time(data->start_time), i + 1);
-			pthread_mutex_unlock(&data->log_mutex);
-			return ;
-		}
-		i++;
-	}
-	if (done_compiling == data->parsed_data.nb_coders)
-		data->simulation_stop = 1;
-	return ;
 }
 
 void	init_simulation(t_data *data, t_pars parsed_data)

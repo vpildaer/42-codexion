@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/06 14:42:15 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/08 15:48:04 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdlib.h>
 
 # include <stdio.h>
+
+# include <stdatomic.h>
 
 # include <string.h>
 
@@ -82,7 +84,7 @@ typedef struct s_coder
 	t_dongle		*left_dongle;
 	t_dongle		*right_dongle;
 	struct timespec	last_compile_start;
-	int				compiles_count;
+	atomic_int		compiles_count;
 	t_coder_stat	coder_status;
 	pthread_mutex_t	coder_mutex;
 	struct s_data	*data;
@@ -91,9 +93,9 @@ typedef struct s_coder
 typedef struct s_data
 {
 	struct timespec	start_time;
-	int				simulation_stop;
-	pthread_mutex_t	global_mutex;
+	atomic_int		simulation_stop;
 	pthread_mutex_t	log_mutex;
+	pthread_t		monitor;
 	t_dongle		*all_dongles;
 	t_coder			*all_coders;
 	t_pars			parsed_data;
@@ -111,8 +113,6 @@ int				store_data(t_pars *parsed_data, int temp[]);
 
 void			init_simulation(t_data *data, t_pars parsed_data);
 
-void			check_simulation(t_data *data);
-
 void			init_coders(t_data *data);
 
 int				init_heap(t_heap *pq, t_pars parsed_data);
@@ -120,6 +120,8 @@ int				init_heap(t_heap *pq, t_pars parsed_data);
 long			timespec_diff(struct timespec a, struct timespec b);
 
 struct timespec	timespec_add(struct timespec a, struct timespec b);
+
+struct timespec	get_condwait(struct timespec release, int cooldown);
 
 long			calc_deadline(t_coder *coder);
 
@@ -145,26 +147,35 @@ void			init_coder_threads(t_data *data);
 
 void			init_dongle_mutex(t_data *data);
 
-void			destroy_dongle_mutex(t_data *data);
+void			init_dongle_cond(t_data *data);
+
+void			destroy_dongle_mutex_and_cond(t_data *data);
+
+void			destroy_coder_mutex(t_data *data);
 
 long			get_time(struct timespec start);
 
 void			compile(t_coder *coder);
 
+void			finish_compile(t_coder *coder, int l_res, int r_res);
+
 void			debug_and_refact(t_coder *coder);
 
 void			add_to_queue(t_heap *pq, t_coder *coder);
 
-// void			wait(t_coder *coder);
-
 void			init_dongle_cond(t_data *data);
 
-void			destroy_dongle_cond(t_data *data);
+int				take_dongle(t_coder *coder, t_dongle *dongle);
 
-void			take_dongle(t_coder *coder, t_dongle *dongle);
+void			wait_dongle(t_coder *coder, t_dongle *dongle,
+					struct timespec now);
 
 void			release_dongle(t_coder *coder, t_dongle *dongle);
 
 void			ft_free(t_data *data);
+
+void			*monitor_routine(void *data);
+
+void			monitor(t_data *data, int i, int *done_compiling);
 
 #endif
