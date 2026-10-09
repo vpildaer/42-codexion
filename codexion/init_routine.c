@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/23 14:24:31 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/09 18:43:04 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/09 19:01:34 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ struct timespec	init_time(t_data *data)
 	res.tv_sec = data->start_time.tv_sec;
 	while (total_nsec < 0)
 	{
-		total_nsec +=  1000000000L;
+		total_nsec += 1000000000L;
 		res.tv_sec--;
 	}
 	res.tv_nsec = total_nsec;
