@@ -6,23 +6,42 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/23 14:24:31 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/09 14:37:50 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/09 18:43:04 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "codexion.h"
 
+struct timespec	init_time(t_data *data)
+{
+	struct timespec	res;
+	long			total_nsec;
+
+	total_nsec = data->start_time.tv_nsec;
+	total_nsec -= (long) data->parsed_data.cooldown * 1000000L;
+	res.tv_sec = data->start_time.tv_sec;
+	while (total_nsec < 0)
+	{
+		total_nsec +=  1000000000L;
+		res.tv_sec--;
+	}
+	res.tv_nsec = total_nsec;
+	return (res);
+}
+
 void	init_coders(t_data *data)
 {
-	int	i;
+	int				i;
+	struct timespec	zero;
 
 	i = 0;
+	zero = init_time(data);
 	while (i < data->parsed_data.nb_coders - 1)
 	{
 		data->all_coders[i].coder_id = i + 1;
 		data->all_coders[i].left_dongle = &(data->all_dongles[i]);
 		data->all_coders[i].right_dongle = &(data->all_dongles[i + 1]);
-		data->all_coders[i].last_compile_start = data->start_time;
+		data->all_coders[i].last_compile_start = zero;
 		data->all_coders[i].compiles_count = 0;
 		data->all_coders[i].coder_status = WAITING;
 		data->all_coders[i].data = data;
@@ -31,7 +50,7 @@ void	init_coders(t_data *data)
 	data->all_coders[i].coder_id = i + 1;
 	data->all_coders[i].left_dongle = &(data->all_dongles[i]);
 	data->all_coders[i].right_dongle = &(data->all_dongles[0]);
-	data->all_coders[i].last_compile_start = data->start_time;
+	data->all_coders[i].last_compile_start = zero;
 	data->all_coders[i].compiles_count = 0;
 	data->all_coders[i].coder_status = WAITING;
 	data->all_coders[i].data = data;
@@ -39,13 +58,15 @@ void	init_coders(t_data *data)
 
 void	init_dongles(t_data *data)
 {
-	int	i;
+	int				i;
+	struct timespec	zero;
 
 	i = 0;
+	zero = init_time(data);
 	while (i < data->parsed_data.nb_coders)
 	{
 		data->all_dongles[i].dongle_status = AVAILABLE;
-		data->all_dongles[i].release_time = data->start_time;
+		data->all_dongles[i].release_time = zero;
 		init_heap(&(data->all_dongles[i].pq), data->parsed_data);
 		i++;
 	}

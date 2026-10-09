@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/09 18:11:10 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/09 18:39:14 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ void			init_coders(t_data *data);
 int				init_heap(t_heap *pq, t_pars parsed_data);
 
 long			timespec_diff(struct timespec a, struct timespec b);
+
+struct timespec	init_time(t_data *data);
 
 struct timespec	timespec_add(struct timespec a, struct timespec b);
 
