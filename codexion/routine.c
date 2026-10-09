@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:04:56 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 17:26:27 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/09 14:08:47 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ void	release_dongle(t_dongle *dongle)
 	pthread_mutex_lock(&dongle->dongle_mutex);
 	dongle->dongle_status = AVAILABLE;
 	clock_gettime(CLOCK_MONOTONIC, &dongle->release_time);
-	pthread_mutex_unlock(&dongle->dongle_mutex);
 	pthread_cond_broadcast(&dongle->dongle_cond);
+	pthread_mutex_unlock(&dongle->dongle_mutex);
 }
 
 void	*routine(void *coder_p)
@@ -90,8 +90,8 @@ void	*routine(void *coder_p)
 
 void	start(t_data *data)
 {
-	init_dongle_mutex(data);
-	init_dongle_cond(data);
+	init_dongle_mutex_and_cond(data);
+	init_coder_mutex(data);
 	pthread_mutex_init(&data->log_mutex, NULL);
 	pthread_create(&data->monitor, NULL, monitor_routine, (void *) data);
 	init_coder_threads(data);

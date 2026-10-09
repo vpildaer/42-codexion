@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/29 12:25:35 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 17:03:50 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/09 14:42:59 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,6 @@ void	init_coder_threads(t_data *data)
 {
 	int	i;
 
-	i = 0;
-	while (i < data->parsed_data.nb_coders)
-	{
-		pthread_mutex_init(&data->all_coders[i].coder_mutex, NULL);
-		i++;
-	}
 	i = 0;
 	while (i < data->parsed_data.nb_coders)
 	{
@@ -37,7 +31,19 @@ void	init_coder_threads(t_data *data)
 	}
 }
 
-void	init_dongle_mutex(t_data *data)
+void	init_coder_mutex(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->parsed_data.nb_coders)
+	{
+		pthread_mutex_init(&data->all_coders[i].coder_mutex, NULL);
+		i++;
+	}
+}
+
+void	init_dongle_mutex_and_cond(t_data *data)
 {
 	int	i;
 
@@ -45,17 +51,6 @@ void	init_dongle_mutex(t_data *data)
 	while (i < data->parsed_data.nb_coders)
 	{
 		pthread_mutex_init(&(data->all_dongles[i].dongle_mutex), NULL);
-		i++;
-	}
-}
-
-void	init_dongle_cond(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->parsed_data.nb_coders)
-	{
 		pthread_cond_init(&(data->all_dongles[i].dongle_cond), NULL);
 		i++;
 	}

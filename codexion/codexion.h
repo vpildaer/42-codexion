@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 16:15:25 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/09 13:57:40 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,9 +145,9 @@ void			start(t_data *data);
 
 void			init_coder_threads(t_data *data);
 
-void			init_dongle_mutex(t_data *data);
+void			init_coder_mutex(t_data *data);
 
-void			init_dongle_cond(t_data *data);
+void			init_dongle_mutex_and_cond(t_data *data);
 
 void			destroy_dongle_mutex_and_cond(t_data *data);
 
