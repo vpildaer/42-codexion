@@ -19,17 +19,54 @@ This project is an adapation of Dijkstra's [Dining Philosophers Problem](https:/
 
 ## Description
 
-This project is an introduction to manipulating threads in C language. 
+This project is an introduction to manipulating [(p)threads](#what-is-a-pthread-) in C language, based on the Dining Philosophers Problem by Dijkstra. 
 
-### What is a (p)Thread ?
+Where in Dijkstra's problem, the Philosophers sitting around a circular table were sharing forks to eat in-between thinking sessions, in Codexion, we have `n` coders sharing `n` dongles connected to a Quantum Compiler. 
 
-Threads (often) perform tasks concurrently.
+The coders alternatively compile, debug or refactor, in this exact order. They need two dongles to compile, and a dongle needs a cooldown time before being used again. 
+
+
+
+### What is a (P)Thread ?
+
+POSIX threads, also known as pthreads after its header `<pthread.h>`, is a model of execution independant from any programming language, allowing a program to control a multitude of workflows that overlap in time.  
+
+Basically, threads (often) perform tasks concurrently. 
+
+
 
 ### Blocking Cases Handled
 
+Throughout the project, attention has to be 
 
+#### Deadlock Prevention & Coffman's Conditions
+
+A **deadlock**,  happens when 
+
+For a deadlock to happen, the 4 **Coffman's conditions** must be fulfilled :
+
+* **Mutual Exclusion**: no dongle can be simultaneously used by multiple coders
+* **Resource Holding**: coders hold a dongle while waiting for the second 
+* **Non-Preemption**: no coder can take a dongle from another
+* **Circular Wait**: each coder wait for the dongle on the left
+
+By design, 
+
+#### Starvation prevention
+
+#### Cooldown Handling
+
+#### Precise Burnout Detection
+
+#### Log Serialization
 
 ### Thread Synchronization Mechanisms
+
+#### Threading Primitives
+
+#### Race Conditions Prevention
+
+#### Thread-Safe Communication Between Coders and the Monitor
 
 ## Instructions
 
@@ -55,7 +92,7 @@ Testing for thread errors with helgrind, a valgrind thread error detector tool.
 valgrind --tool=helgrind ./codexion 3 1000 50 10 10 20 10 fifo
 ```
 
-**Result**: warnings reported only on `pthread_cond_timedwait` inside `wait_dongle`. Verified as a known Helgrind/glibc ≥2.34 false positive (Helgrind's instrumentation hasn't been updated for glibc's internal condition-variable implementation), not a real race, confirmed by the clean ThreadSanitizer (TSan) run below and by manual review (the mutex is correctly held at every call site).
+**Result**: warnings reported only on `pthread_cond_timedwait` inside `wait_dongle`. Verified as a [known Helgrind/glibc ≥2.34 false positive](https://bugzilla.redhat.com/show_bug.cgi?id=1974357) (Helgrind's instrumentation hasn't been updated for glibc's internal condition-variable implementation), not a real race, confirmed by the clean ThreadSanitizer (TSan) run below and by manual review (the mutex is correctly held at every call site).
 
 #### Data Races (Thread Sanitizer)
 
@@ -100,6 +137,7 @@ gcc -Wall -Wextra -Werror -fsanitize=thread -pthread codexion_dir/*.c -o codexio
 
 * [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
 * [pthreads](https://en.wikipedia.org/wiki/Pthreads)
+* [POSIX Threads (pthreads) — The Simplest Way to Understand Real Multithreading in C](https://medium.com/@techdhaba.training/posix-threads-pthreads-the-simplest-way-to-understand-real-multithreading-in-c-c2f591ab7a03)
 * [Mutex lock for Linux Thread Synchronization](https://www.geeksforgeeks.org/linux-unix/mutex-lock-for-linux-thread-synchronization/)
 * [Mutex Introduction (pthreads)](https://www.youtube.com/watch?v=raLCgPK-Igc)
 * [C Program to Implement Priority Queue](https://www.geeksforgeeks.org/c/c-program-to-implement-priority-queue/)
@@ -113,7 +151,8 @@ gcc -Wall -Wextra -Werror -fsanitize=thread -pthread codexion_dir/*.c -o codexio
 * [How heap work? Heapify algorithm](https://medium.com/@garggourav012/how-heap-work-heapify-algorithm-0bc1fdcede15)
 * [Helgrind: a thread error detector](https://valgrind.org/docs/manual/hg-manual.html)
 * [Understanding Data Races in Programming: A Quick Overview](https://medium.com/@efebalikofc/understanding-data-races-in-programming-a-quick-overview-1058047c0c6f)
-
+* [Understanding Synchronization Primitives and Techniques in Multithreaded Programming](https://medium.com/@ibrahim__/understanding-synchronization-primitives-and-techniques-in-multithreaded-programming-565b71017d0e)
+* [Coffman conditions](https://faq.computersciencewiki.org/index.php/home/article/coffman-conditions)
 
 ### AI Use 
 
