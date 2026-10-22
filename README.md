@@ -41,7 +41,7 @@ Throughout the project, attention has to be
 
 #### Deadlock Prevention & Coffman's Conditions
 
-A **deadlock**,  happens when 
+A [deadlock](https://en.wikipedia.org/wiki/Deadlock_(computer_science)) occurs when a thread enters a state of waiting for a resource held by another waiting process.
 
 For a deadlock to happen, the 4 **Coffman's conditions** must be fulfilled :
 
@@ -50,7 +50,26 @@ For a deadlock to happen, the 4 **Coffman's conditions** must be fulfilled :
 * **Non-Preemption**: no coder can take a dongle from another
 * **Circular Wait**: each coder wait for the dongle on the left
 
-By design, 
+To prevent a deadlock from happening, one of the 4 Coffman's conditions has to be neglected. By design, mutual exclusion and non-preemption cannot be neglected, thus leaving only resource holding or circular wait to be neglected. 
+
+During the development of the code, neglecting circular wait seemed like the natural choice. 
+
+To do so, I implemented a partial ordering of resources in the `compile` function.
+
+```
+if (coder->left_dongle < coder->right_dongle)
+	{
+		l_res = take_dongle(coder, coder->left_dongle);
+		r_res = take_dongle(coder, coder->right_dongle);
+	}
+	else
+	{
+		r_res = take_dongle(coder, coder->right_dongle);
+		l_res = take_dongle(coder, coder->left_dongle);
+	}
+```
+
+This implementation means that the waiting inside `take_dongle` 
 
 #### Starvation prevention
 
@@ -138,6 +157,7 @@ gcc -Wall -Wextra -Werror -fsanitize=thread -pthread codexion_dir/*.c -o codexio
 * [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
 * [pthreads](https://en.wikipedia.org/wiki/Pthreads)
 * [POSIX Threads (pthreads) — The Simplest Way to Understand Real Multithreading in C](https://medium.com/@techdhaba.training/posix-threads-pthreads-the-simplest-way-to-understand-real-multithreading-in-c-c2f591ab7a03)
+* [Deadlock](https://en.wikipedia.org/wiki/Deadlock_(computer_science))
 * [Mutex lock for Linux Thread Synchronization](https://www.geeksforgeeks.org/linux-unix/mutex-lock-for-linux-thread-synchronization/)
 * [Mutex Introduction (pthreads)](https://www.youtube.com/watch?v=raLCgPK-Igc)
 * [C Program to Implement Priority Queue](https://www.geeksforgeeks.org/c/c-program-to-implement-priority-queue/)
