@@ -157,12 +157,28 @@ If any of these two checks passes, the `simulation_stop` flag is turned on and f
 
 Log serialization comes down to one shared mutex guarding every `printf` call in the program. 
 
+It is a dedicated mutex, reserved only for all logs (`t_data.log_mutex`), locked before any log is being print and unlocked after every print. 
+
+Since every thread (coder threads and the monitor thread alike) goes through this same mutex before calling printf, no two `printf` calls can ever be mid-flight at the same time.
+
+Without it, two threads calling `printf` concurrently could interleave their output mid-line (`printf`’s internal buffering isn’t atomic across threads), producing garbled combined lines.
 
 
 ### Thread Synchronization Mechanisms
 
 #### Threading Primitives
 
+##### Pthreads
+
+`pthread_t` / `pthread_create` / `pthread_join`
+
+One thread per coder, creae
+
+##### Mutexes
+
+##### Cond variables
+
+##### Atomic Integers
 
 
 #### Race Conditions Prevention
