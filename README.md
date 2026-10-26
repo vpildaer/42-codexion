@@ -2,7 +2,7 @@
 
 # Codexion - 42 Belgium
 
-This project is an adapation of Dijkstra's [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem). 
+This project is an adaptation of Dijkstra's [Dining Philosophers Problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem). 
 
 ## Table of Contents
 
@@ -29,7 +29,7 @@ The coders alternatively compile, debug or refactor, in this exact order. They n
 
 ### What is a (P)Thread ?
 
-POSIX threads, also known as pthreads after its header `<pthread.h>`, is a model of execution independant from any programming language, allowing a program to control a multitude of workflows that overlap in time.  
+POSIX threads, also known as pthreads after its header `<pthread.h>`, is a model of execution independent from any programming language, allowing a program to control a multitude of workflows that overlap in time.  
 
 Basically, threads (often) perform tasks concurrently. 
 
@@ -37,7 +37,6 @@ Basically, threads (often) perform tasks concurrently.
 
 ### Blocking Cases Handled
 
-Throughout the project, attention has to be 
 
 #### Deadlock Prevention & Coffman's Conditions
 
@@ -50,7 +49,7 @@ For a deadlock to happen, the 4 **Coffman's conditions** must be fulfilled :
 * **Non-Preemption**: no coder can take a dongle from another
 * **Circular Wait**: each coder wait for the dongle on the left
 
-To prevent a deadlock from happening, one of the 4 Coffman's conditions has to be neglected. By design, mutual exclusion and non-preemption cannot be neglected, thus leaving only resource holding (Dijkstra's solution) or circular wait to be neglected. 
+To prevent a deadlock from happening, one of the 4 Coffman's conditions has to be neglected. By design, mutual exclusion and non-preemption cannot be neglected, thus leaving only resource holding (Dijkstra's solution) or circular wait (Resource Hierarchy solution) to be neglected. 
 
 During the development of the code, **neglecting circular wait** seemed like the natural choice. 
 
@@ -144,14 +143,17 @@ if ((timespec_diff(data->all_coders[i].last_compile_start, now)
 			>= data->parsed_data.burnout
 			&& data->all_coders[i].compiles_count > 0)
 	|| (timespec_diff(data->start_time, now) >= data->parsed_data.burnout
-			&& data->all_coders[i].compiles_count == 0))
+			&& data->all_coders[i].compiles_count == 0
+			&& data->all_coders[i].coder_status != COMPILING))
 ```
 
 The two branches differ by which case they check.
 
-A coder that has already compiled at least once is measured against its own last_compile_start (set fresh each time it actually starts compiling, in finish_compile). A coder that hasn’t compiled yet is measured against the simulation’s start_time instead.
+A coder that has already compiled at least once is measured against its own last_compile_start (set fresh each time it actually starts compiling, in finish_compile). A coder that hasn’t compiled yet or is mid-first-compile is measured against the simulation’s start_time instead.
 
-If any of these two checks passes, the `simulation_stop` flag is turned on and from that cascades throughout the whole simulation to break all functions and free what has to be freed.
+If any of these two checks passes, the `simulation_stop` flag is turned on and from that cascades throughout the whole simulation to break all functions.
+
+Then, once threads have joined, `ft_free` is called and all the freeing happens normally.
 
 #### Log Serialization
 
@@ -190,7 +192,7 @@ One global `log_mutex` (see [Log Serializatiion](#log-serialization))
 
 `pthread_cond_t`: `dongle_cond`
 
-One `dongle_cond` per dongle, used as a mean for the coders to wait (with `pthread_cond_timedwait`) for the dongle to be available, then to wake up all of the waiting coders on a particular dongle in `release_dongle` calling `pthread_cond_broadcast`, waking up all waiting threads (and not `pthread_cond_signal` that wakes at least one waiting threads).
+One `dongle_cond` per dongle, used as a mean for the coders to wait (with `pthread_cond_timedwait`) for the dongle to be available, then to wake up all of the waiting coders on a particular dongle in `release_dongle` calling `pthread_cond_broadcast`, waking up all waiting threads (and not `pthread_cond_signal` that wakes at least one waiting thread).
 
 `pthread_cond_timedwait` rather than plain `pthread_cond_wait`
 
@@ -200,7 +202,7 @@ A plain `cond_wait` would never wake up for the second case, only an explicit br
 
 ##### Atomic Integers
 
-`atomic_int`: `simulation_stop` annd `compiles_count`
+`atomic_int`: `simulation_stop` and `compiles_count`
 
 These are the two pieces of shared state read very frequently (checked in nearly every function, every loop iteration) but don’t need the richer coordination a mutex gives (they’re single scalars, not compound state, and nothing needs to hold them locked across multiple operations). `atomic_int` gives lock-free, race-free reads and writes without paying mutex overhead on every check. 
 
@@ -214,7 +216,7 @@ Appropriate here specifically because each is just a flag/counter, unlike `coder
 
 **Compound state → mutex with the whole operation inside the lock.** The cases that actually need protection are ones where multiple fields have to change together, or where a check-then-act sequence would be unsafe if another thread could sneak in between the check and the act. 
 
-The clearest example: `take_dongle` does `clock_gettime` → check `dongle_status`/`release_time`/cooldown → (maybe wait) → set `dongle_status = TAKEN` → log, all under `dongle_mutex`. If that lock weren't held across the whole sequence, two neighboring coders could both read `dongle_status == AVAILABLE` at the same instant, both pass the check, and both set it to `TAKEN`, a classic check-then-act race that would let the same physical dongle be "held" by two coders simultaneously, exactly what the mutex exists to rule out. 
+`take_dongle` does `clock_gettime` → check `dongle_status`/`release_time`/cooldown → (maybe wait) → set `dongle_status = TAKEN` → log, all under `dongle_mutex`. If that lock weren't held across the whole sequence, two neighboring coders could both read `dongle_status == AVAILABLE` at the same instant, both pass the check, and both set it to `TAKEN`, a classic check-then-act race that would let the same physical dongle be "held" by two coders simultaneously, exactly what the mutex exists to rule out. 
 
 Same logic for `coder_mutex`: `finish_compile` sets `coder_status = COMPILING` and stamps `last_compile_start` together as one atomic unit, because the monitor thread reads both of those fields together when deciding whether a coder has burned out. If they could be updated separately and read mid-update, the monitor could see a `COMPILING` status paired with a stale timestamp from a previous cycle.
 
@@ -256,6 +258,35 @@ The following tests were run against the project during development.
 ```
 
 **Result**: once every coder reaches `number_of_compiles_required`, the simulation stops cleanly with no `burned out` message, and any in-flight log for a coder still finishing its cycle is correctly suppressed.
+
+#### Deadlock Avoidance
+
+Increasing the number of coders, decreasing the burnout time, checking that it can be scaled up.
+
+```
+./codexion 10 1000 50 10 10 10 10 fifo
+./codexion 10 1000 50 10 10 10 10 edf
+```
+
+**Result**: same as before.
+
+#### Starvation
+
+Tight burnout window relative to compile/debug/refactor times, so a coder genuinely has to win dongle contention regularly to avoid burning out.
+
+```
+./codexion 4 300 50 10 10 20 10 edf
+```
+
+**Result**: not tight enough.
+
+Tighter test:
+
+```
+./codexion 4 150 50 10 10 20 10 edf
+```
+
+**Result**: too tight, coder 4 burns out.
 
 #### Cooldown Correctness
 
@@ -329,8 +360,8 @@ gcc -Wall -Wextra -Werror -fsanitize=thread -pthread codexion_dir/*.c -o codexio
 * [Understanding Data Races in Programming: A Quick Overview](https://medium.com/@efebalikofc/understanding-data-races-in-programming-a-quick-overview-1058047c0c6f)
 * [Understanding Synchronization Primitives and Techniques in Multithreaded Programming](https://medium.com/@ibrahim__/understanding-synchronization-primitives-and-techniques-in-multithreaded-programming-565b71017d0e)
 * [Coffman conditions](https://faq.computersciencewiki.org/index.php/home/article/coffman-conditions)
-* [Global interpreter lock](en.wikipedia.org/wiki/Global_interpreter_lock)
+* [Global interpreter lock](https://en.wikipedia.org/wiki/Global_interpreter_lock)
 
-### AI Use 
+### AI Use
 
 AI was first used to design all structures needed for this project, then used throughout the project as a debugging tool. Finally, it was used to design tests to make sure all the requirements of the subject were met, as well as a helper during writing this README.md file, that could have been a bit shorter, I confess.

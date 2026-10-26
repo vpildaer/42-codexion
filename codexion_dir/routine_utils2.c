@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 13:25:29 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 17:53:13 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/26 19:11:39 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	monitor(t_data *data, int i, int *done_compiling)
 			>= data->parsed_data.burnout
 			&& data->all_coders[i].compiles_count > 0)
 		|| (timespec_diff(data->start_time, now) >= data->parsed_data.burnout
-			&& data->all_coders[i].compiles_count == 0))
+			&& data->all_coders[i].compiles_count == 0
+			&& data->all_coders[i].coder_status != COMPILING))
 	{
 		data->simulation_stop = 1;
 		pthread_mutex_lock(&data->log_mutex);
