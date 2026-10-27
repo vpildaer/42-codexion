@@ -255,6 +255,14 @@ make
 ```
 and you will get the executable !
 
+All other instructions available are:
+
+```
+make re		#cleans and creates a new executable
+make clean	#cleans object files
+make fclean	#cleans object files and executable
+```
+
 ### Running Tests
 
 The following tests were run against the project during development.
