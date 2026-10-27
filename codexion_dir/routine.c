@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:04:56 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/09 18:31:19 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/27 15:28:40 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ int	take_dongle(t_coder *coder, t_dongle *dongle)
 	clock_gettime(CLOCK_MONOTONIC, &now);
 	if ((dongle->dongle_status != AVAILABLE
 			|| timespec_diff(dongle->release_time, now)
-			< coder->data->parsed_data.cooldown)
+			< coder->data->parsed_data.cooldown
+			|| peek(&dongle->pq) != -1)
 		&& !coder->data->simulation_stop)
 		wait_dongle(coder, dongle, now);
 	if (coder->data->simulation_stop)

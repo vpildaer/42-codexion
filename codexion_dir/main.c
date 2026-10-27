@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:10:18 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 16:33:40 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:08:36 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 void	error(int parser_res)
 {
 	if (parser_res == 1)
-		printf("Input Error: negative/non-integers numbers are not allowed");
+		printf("Input Error: negative/non-integers numbers are not allowed\n");
 	else if (parser_res == 2)
-		printf("Input Error: scheduler has to either be fifo or edf");
+		printf("Input Error: scheduler has to either be fifo or edf\n");
 	else if (parser_res == 3)
-		printf("Input Error: number_of_coders must be greater or equal to 1");
+		printf("Input Error: number_of_coders must be >= 1\n");
 	else if (parser_res == 4)
-		printf("Input Error: number_of_compiles_required must be >= 1");
+		printf("Input Error: number_of_compiles_required must be >= 1\n");
 	else if (parser_res == 5)
-		printf("Input Error: time_to_compile must be greater or equal to 1");
+		printf("Input Error: time_to_compile must be greater or equal to 1\n");
 	else if (parser_res == 6)
-		printf("Input Error: time_to_burnout must be greater or equal to 1");
+		printf("Input Error: time_to_burnout must be greater or equal to 1\n");
 	else if (parser_res == 7)
-		printf("Input Error: simulation will always fail with given times");
+		printf("Input Error: simulation will always fail with given times\n");
 	else
-		printf("Input Error");
+		printf("Input Error\n");
 }
 
 void	ft_free(t_data *data)
