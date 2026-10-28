@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 13:25:29 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/28 15:20:29 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/28 18:18:32 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,29 @@ void	requeue(t_coder *coder)
 {
 	if (coder->left_dongle < coder->right_dongle)
 	{
+		pthread_mutex_lock(&coder->left_dongle->dongle_mutex);
 		add_to_queue(&coder->left_dongle->pq, coder);
+		pthread_mutex_unlock(&coder->left_dongle->dongle_mutex);
+		pthread_mutex_lock(&coder->right_dongle->dongle_mutex);
 		add_to_queue(&coder->right_dongle->pq, coder);
+		pthread_mutex_unlock(&coder->right_dongle->dongle_mutex);
 	}
 	else
 	{
+		pthread_mutex_lock(&coder->right_dongle->dongle_mutex);
 		add_to_queue(&coder->right_dongle->pq, coder);
+		pthread_mutex_unlock(&coder->right_dongle->dongle_mutex);
+		pthread_mutex_lock(&coder->left_dongle->dongle_mutex);
 		add_to_queue(&coder->left_dongle->pq, coder);
+		pthread_mutex_unlock(&coder->left_dongle->dongle_mutex);
 	}
+}
+
+void	single_coder_case(t_coder *coder)
+{
+	pthread_mutex_lock(&coder->data->log_mutex);
+	printf("%ld %d has taken a dongle\n", get_time(coder->data->start_time),
+		coder->coder_id);
+	pthread_mutex_unlock(&coder->data->log_mutex);
+	usleep(coder->data->parsed_data.burnout * 1005);
 }

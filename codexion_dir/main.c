@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/16 16:10:18 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/27 17:08:36 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/28 18:46:44 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void	error(int parser_res)
 		printf("Input Error: time_to_compile must be greater or equal to 1\n");
 	else if (parser_res == 6)
 		printf("Input Error: time_to_burnout must be greater or equal to 1\n");
-	else if (parser_res == 7)
-		printf("Input Error: simulation will always fail with given times\n");
 	else
 		printf("Input Error\n");
 }
