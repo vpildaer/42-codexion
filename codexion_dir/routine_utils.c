@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:10:33 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/08 16:15:50 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/28 14:55:47 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,14 @@ void	compile(t_coder *coder)
 	int	r_res;
 
 	if (coder->left_dongle == coder->right_dongle)
+	{
+		pthread_mutex_lock(&coder->data->log_mutex);
+		printf("%ld %d has taken a dongle\n", get_time(coder->data->start_time),
+			coder->coder_id);
+		pthread_mutex_unlock(&coder->data->log_mutex);
+		usleep(coder->data->parsed_data.burnout * 1005);
 		return ;
+	}
 	if (coder->left_dongle < coder->right_dongle)
 	{
 		l_res = take_dongle(coder, coder->left_dongle);

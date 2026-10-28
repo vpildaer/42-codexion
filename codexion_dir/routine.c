@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/28 13:04:56 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/27 15:28:40 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/28 16:40:54 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	wait_dongle(t_coder *coder, t_dongle *dongle, struct timespec now)
 {
 	struct timespec	wait;
 
-	add_to_queue(&dongle->pq, coder);
 	while ((dongle->dongle_status != AVAILABLE
 			|| peek(&dongle->pq) != coder->coder_id
 			|| (timespec_diff(dongle->release_time, now)
@@ -76,9 +75,9 @@ void	*routine(void *coder_p)
 	while (!coder->data->simulation_stop)
 	{
 		if (coder->data->simulation_stop
-			|| coder->data->parsed_data.nb_coders == 1
 			|| coder->compiles_count >= coder->data->parsed_data.nb_compiles)
 			return (NULL);
+		requeue(coder);
 		compile(coder);
 		if (!coder->data->simulation_stop)
 		{

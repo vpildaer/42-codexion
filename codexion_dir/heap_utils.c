@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/27 13:03:22 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/06 15:18:37 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/28 14:27:12 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ long	calc_deadline(t_coder *coder)
 {
 	long	res;
 
+	pthread_mutex_lock(&coder->coder_mutex);
 	res = timespec_diff(coder->data->start_time, coder->last_compile_start);
+	pthread_mutex_unlock(&coder->coder_mutex);
 	res = res + coder->data->parsed_data.burnout;
 	return (res);
 }

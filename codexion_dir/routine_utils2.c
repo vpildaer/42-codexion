@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 13:25:29 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/26 19:11:39 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/28 15:20:29 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,18 @@ void	*monitor_routine(void *data_p)
 		usleep(1000);
 	}
 	return (NULL);
+}
+
+void	requeue(t_coder *coder)
+{
+	if (coder->left_dongle < coder->right_dongle)
+	{
+		add_to_queue(&coder->left_dongle->pq, coder);
+		add_to_queue(&coder->right_dongle->pq, coder);
+	}
+	else
+	{
+		add_to_queue(&coder->right_dongle->pq, coder);
+		add_to_queue(&coder->left_dongle->pq, coder);
+	}
 }

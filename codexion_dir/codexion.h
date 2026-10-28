@@ -6,7 +6,7 @@
 /*   By: vpildaer <vpildaer@student.42belgium.be    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/14 17:42:26 by vpildaer          #+#    #+#             */
-/*   Updated: 2026/10/09 18:39:14 by vpildaer         ###   ########.fr       */
+/*   Updated: 2026/10/28 14:44:21 by vpildaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,5 +179,7 @@ void			ft_free(t_data *data);
 void			*monitor_routine(void *data);
 
 void			monitor(t_data *data, int i, int *done_compiling);
+
+void			requeue(t_coder *coder);
 
 #endif
